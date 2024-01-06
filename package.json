@@ -15,6 +15,7 @@
   "devDependencies": {
     "@commitlint/cli": "^18.4.4",
     "@commitlint/config-conventional": "^18.4.4",
+    "@nestjs/cli": "^10.2.1",
     "husky": "^8.0.0",
     "lint-staged": "^15.2.0"
   }

@@ -1,0 +1,26 @@
+# Ignore built files
+build/
+dist/
+
+# Ignore node_modules
+node_modules/
+
+# Ignore build files
+dist/
+build
+
+# Ignore coverage directory
+coverage
+
+# Ignore e2e tests
+e2e-tests/**
+
+# Ignore vscode settings
+**/.vscode/**
+
+
+# Ignore frontend
+frontend/
+
+# config files
+*.config.js
