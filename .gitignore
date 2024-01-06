@@ -1,0 +1,9 @@
+#DS STORE
+.DS_Store
+*/.DS_Store
+
+#node modules
+node_modules
+
+#.env
+.env
