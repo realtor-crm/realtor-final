@@ -1,0 +1,10 @@
+node_modules
+**/.next/**
+**/_next/**
+**/.vscode/**
+**/dist/**
+e2e-tests/**
+public
+.github
+build
+coverage

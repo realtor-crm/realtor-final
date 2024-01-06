@@ -1,0 +1,56 @@
+{
+  "root": false,
+  "extends": ["../../.eslintrc.json", "plugin:react/recommended"],
+  "plugins": ["react", "react-hooks"],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "overrides": [
+    {
+      "files": ["**/*.ts", "**/*.tsx"],
+      "parserOptions": {
+        "sourceType": "module",
+        "warnOnUnsupportedTypeScriptVersion": false
+      }
+    },
+    {
+      "files": ["test/**/*"],
+      "rules": {
+        "react/react-in-jsx-scope": "off"
+      }
+    }
+  ],
+  "rules": {
+    "react-hooks/exhaustive-deps": "warn",
+    "react/forbid-foreign-prop-types": [
+      "warn",
+      {
+        "allowInPropTypes": true
+      }
+    ],
+    "react/jsx-no-comment-textnodes": "warn",
+    "react/jsx-no-duplicate-props": "warn",
+    "react/jsx-no-target-blank": "warn",
+    "react/jsx-no-undef": "error",
+    "react/jsx-pascal-case": [
+      "warn",
+      {
+        "allowAllCaps": true,
+        "ignore": []
+      }
+    ],
+    "react/jsx-uses-react": "warn",
+    "react/jsx-uses-vars": "warn",
+    "react/no-danger-with-children": "warn",
+    "react/no-deprecated": "warn",
+    "react/no-direct-mutation-state": "warn",
+    "react/no-is-mounted": "warn",
+    "react/no-typos": "error",
+    "react/react-in-jsx-scope": "off",
+    "react/require-render-return": "error",
+    "react/style-prop-object": "warn",
+    "react-hooks/rules-of-hooks": "error"
+  }
+}
