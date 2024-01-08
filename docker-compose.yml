@@ -3,7 +3,6 @@ version: "3.8"
 services:
   backend:
     container_name: backend
-    working_dir: /app
     build:
       context: ./packages/backend
       dockerfile: backend.dockerfile
@@ -11,11 +10,10 @@ services:
       - "8000:3000"
     volumes:
       - ./packages/backend:/app
-      - /app/node_modules
+    restart: unless-stopped
 
   frontend:
     container_name: frontend
-    working_dir: /app
     build:
       context: ./packages/frontend
       dockerfile: frontend.dockerfile
@@ -23,7 +21,7 @@ services:
       - "3000:3000"
     volumes:
       - ./packages/frontend:/app
-      - /app/node_modules
+    restart: unless-stopped
 
   backend-database:
     container_name: backend-database
