@@ -48,8 +48,10 @@ services:
       - keycloak-data:/var/lib/postgresql/data
 
   keycloak:
-    image: quay.io/keycloak/keycloak:latest
-    command: ["start-dev", "--import-realm"]
+    container_name: keycloak-server
+    build:
+      context: ./keycloak
+      dockerfile: keycloak.dockerfile
     restart: unless-stopped
     environment:
       KC_DB: postgres
@@ -63,7 +65,9 @@ services:
     depends_on:
       - keycloak-database
     volumes:
-      - ./keycloak/realm.json:/opt/keycloak/data/import/realm.json:ro
+      - ./keycloak/conf:/opt/keycloak/conf
+      - ./keycloak/realms:/opt/keycloak/data/import
+      - ./keycloak/themes:/opt/keycloak/themes
 
 volumes:
   postgres-data:
