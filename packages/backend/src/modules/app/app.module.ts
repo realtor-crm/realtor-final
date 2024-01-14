@@ -17,10 +17,18 @@ import { envValidationSchema } from './schemas/env.schema';
       isGlobal: true,
       load: [keycloakConfig, appConfig],
       cache: true,
-      validationSchema: envValidationSchema,
-      validationOptions: {
-        allowUnknown: false,
-        abortEarly: true
+      validate: (config) => {
+        const parsed = envValidationSchema.safeParse(config);
+
+        if (!parsed.success) {
+          //make the error message more descriptive
+          const errors = parsed.error.message
+            .replace('Invalid value', 'Invalid value for')
+            .replace('should be', 'of type');
+          throw new Error(errors);
+        }
+
+        return config;
       }
     }),
     AuthModule,
