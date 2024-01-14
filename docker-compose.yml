@@ -27,8 +27,8 @@ services:
     container_name: backend-database
     image: postgres:latest
     environment:
-      POSTGRES_USER: ${BACKEND_USER}
-      POSTGRES_PASSWORD: ${BACKEND_PASSWORD}
+      POSTGRES_USER: ${BACKEND_DB_USER}
+      POSTGRES_PASSWORD: ${BACKEND_DB_PASSWORD}
       POSTGRES_DB: ${BACKEND_DB}
     ports:
       - "5432:5432"
