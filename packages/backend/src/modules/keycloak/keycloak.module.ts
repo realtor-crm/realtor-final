@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { KeycloakConnectModule } from 'nest-keycloak-connect';
-import { KeycloakConfigService } from './keycloak-config.service';
+import { KeycloakConfigService } from './services/config.service';
 
 @Module({
   imports: [
