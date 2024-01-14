@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
+import { LocalAuthModule } from '../local-auth/local-auth.module';
+import { SocialAuthModule } from '../social-auth/social-auth.module';
 import { AuthService } from './auth.service';
 
 @Module({
-  providers: [AuthService],
-  exports: [AuthService]
+  imports: [LocalAuthModule, SocialAuthModule],
+  exports: [LocalAuthModule, SocialAuthModule],
+  providers: [AuthService]
 })
 export class AuthModule {}
