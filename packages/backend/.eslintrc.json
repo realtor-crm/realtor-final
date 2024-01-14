@@ -1,0 +1,11 @@
+{
+  "root": false,
+  "overrides": [
+    {
+      "files": ["**/*.ts"],
+      "rules": {
+        "no-useless-constructor": "off"
+      }
+    }
+  ]
+}
