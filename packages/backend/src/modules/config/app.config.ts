@@ -1,8 +1,6 @@
 import { registerAs } from '@nestjs/config';
 
-const appConfig = () => ({
+export const appConfig = registerAs('app', () => ({
   port: parseInt(process.env.PORT!),
   corsOrigin: process.env.CORS_ORIGIN!
-});
-
-export default registerAs('app', appConfig);
+}));

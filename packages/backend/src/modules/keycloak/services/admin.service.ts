@@ -2,7 +2,7 @@ import KeycloakAdminClient from '@keycloak/keycloak-admin-client';
 import { RequiredActionAlias } from '@keycloak/keycloak-admin-client/lib/defs/requiredActionProviderRepresentation';
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import keycloakConfig from '../../config/keycloak.config';
+import { keycloakConfig } from '../../config';
 import { LocalRegisterDto } from '../../local-auth/dtos/register.dto';
 
 @Injectable()
