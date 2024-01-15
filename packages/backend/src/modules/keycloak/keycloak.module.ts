@@ -1,5 +1,9 @@
+import KeycloakAdminClient from '@keycloak/keycloak-admin-client';
 import { Module } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
 import { KeycloakConnectModule } from 'nest-keycloak-connect';
+import { keycloakConfig } from '../config';
+import { KeycloakAdminService } from './services/admin.service';
 import { KeycloakConfigService } from './services/config.service';
 
 @Module({
@@ -8,7 +12,20 @@ import { KeycloakConfigService } from './services/config.service';
       useClass: KeycloakConfigService
     })
   ],
-  providers: [KeycloakConfigService],
-  exports: [KeycloakConnectModule]
+  providers: [
+    KeycloakConfigService,
+    KeycloakAdminService,
+    {
+      provide: KeycloakAdminClient,
+      inject: [keycloakConfig.KEY],
+      useFactory: (kcConfig: ConfigType<typeof keycloakConfig>) => {
+        return new KeycloakAdminClient({
+          baseUrl: kcConfig['auth-server-url'],
+          realmName: kcConfig.realm
+        });
+      }
+    }
+  ],
+  exports: [KeycloakConnectModule, KeycloakAdminService]
 })
 export class KeycloakModule {}
