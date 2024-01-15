@@ -4,12 +4,14 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { keycloakConfig } from '../../config';
 import { LocalRegisterDto } from '../../local-auth/dtos/register.dto';
+import { KEYCLOAK_ADMIN_CLIENT } from '../constants';
 
 @Injectable()
 export class KeycloakAdminService {
   constructor(
     @Inject(keycloakConfig.KEY)
     private readonly kcConfig: ConfigType<typeof keycloakConfig>,
+    @Inject(KEYCLOAK_ADMIN_CLIENT)
     private readonly adminClient: KeycloakAdminClient
   ) {}
 
