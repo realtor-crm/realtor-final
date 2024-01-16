@@ -6,6 +6,7 @@ import { keycloakConfig } from '../config';
 import { KEYCLOAK_ADMIN_CLIENT } from './constants';
 import { KeycloakAdminService } from './services/admin.service';
 import { KeycloakConfigService } from './services/config.service';
+import { KeycloakGrantService } from './services/grant.service';
 
 @Module({
   imports: [
@@ -14,8 +15,6 @@ import { KeycloakConfigService } from './services/config.service';
     })
   ],
   providers: [
-    KeycloakConfigService,
-    KeycloakAdminService,
     {
       provide: KEYCLOAK_ADMIN_CLIENT,
       inject: [keycloakConfig.KEY],
@@ -25,8 +24,11 @@ import { KeycloakConfigService } from './services/config.service';
           realmName: kcConfig.realm
         });
       }
-    }
+    },
+    KeycloakConfigService,
+    KeycloakAdminService,
+    KeycloakGrantService
   ],
-  exports: [KeycloakConnectModule, KeycloakAdminService]
+  exports: [KeycloakConnectModule, KeycloakAdminService, KeycloakGrantService]
 })
 export class KeycloakModule {}

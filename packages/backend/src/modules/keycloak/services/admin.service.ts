@@ -15,7 +15,16 @@ export class KeycloakAdminService {
     private readonly adminClient: KeycloakAdminClient
   ) {}
 
-  private async authenticateAdmin() {
+  public async issueGrant(username: string, password: string, clientId: string) {
+    return await this.adminClient.auth({
+      grantType: 'password',
+      username,
+      password,
+      clientId
+    });
+  }
+
+  public async authenticateAdmin() {
     await this.adminClient.auth({
       grantType: 'client_credentials',
       clientId: this.kcConfig.clientId,
