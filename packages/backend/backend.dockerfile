@@ -1,8 +1,13 @@
-# Use the official Node.js runtime as the base image
 FROM node:latest
 
 WORKDIR /app
 
 EXPOSE 3000
 
-CMD [ -d "node_modules" ] && npm run start:dev || npm ci && npm run start:dev
+CMD if [ -d "node_modules" ]; then \
+        npm run start:dev; \
+    else \
+        npm ci; \
+        chown -R node:node /app/node_modules/prisma-kysely; \
+        npm run start:dev; \
+    fi

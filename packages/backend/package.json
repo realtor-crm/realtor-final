@@ -30,6 +30,8 @@
     "kysely": "^0.27.2",
     "nest-keycloak-connect": "^1.9.5",
     "nestjs-zod": "^3.0.0",
+    "pg": "^8.11.3",
+    "prisma-kysely": "^1.7.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"
   },
