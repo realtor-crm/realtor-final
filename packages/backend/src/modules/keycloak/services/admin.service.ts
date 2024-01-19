@@ -32,14 +32,18 @@ export class KeycloakAdminService {
     });
   }
 
-  private async createKeycloakUser(
-    registerDto: LocalRegisterDto,
-    verifyEmail: boolean,
+  public async createKeycloakUser({
+    registerDto,
+    verifyEmail,
     activeProfile = true
-  ) {
+  }: {
+    registerDto: LocalRegisterDto;
+    verifyEmail: boolean;
+    activeProfile: boolean;
+  }) {
     const { email, firstName, lastName, password } = registerDto;
 
-    return await this.adminClient.users.create({
+    return this.adminClient.users.create({
       username: email,
       firstName,
       lastName,

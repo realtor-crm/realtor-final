@@ -20,8 +20,9 @@ export class LocalAuthController {
 
   @Public()
   @Post('register')
+  @UsePipes(ZodValidationPipe)
   async register(@Body() registerDto: LocalRegisterDto) {
-    /*     return this.localAuthService.register(registerDto); */
+    return this.localAuthService.register(registerDto);
   }
 
   @Post('logout')

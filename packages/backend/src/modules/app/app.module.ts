@@ -8,6 +8,7 @@ import { kyselyConfig } from '../config/kysely.config';
 import { KeycloakModule } from '../keycloak/keycloak.module';
 import { KyselyDatabaseModule } from '../kysely/kysely.module';
 import { PrismaModule } from '../prisma/prisma.module';
+import { UserModule } from '../user/user.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { envValidationSchema } from './schemas/env.schema';
@@ -33,6 +34,7 @@ import { envValidationSchema } from './schemas/env.schema';
       }
     }),
     AuthModule,
+    UserModule,
     KeycloakModule,
     KyselyDatabaseModule
     /*     PrismaModule */
