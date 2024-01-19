@@ -1,47 +1,47 @@
-import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Kysely } from 'kysely';
+import { DB } from '@/src/db/types';
 import { TokenResponse } from '../auth/types/auth.types';
 import { KeycloakGrantService } from '../keycloak/services/grant.service';
-import { KeycloakError } from '../keycloak/types/error.type';
+import { KYSELY_DATABASE_CONNECTION } from '../kysely/constants';
 import { LocalLoginDto } from './dtos/login.dto';
 import { LocalRegisterDto } from './dtos/register.dto';
 
+//TODO hide error messages from user and add logging using winston
+
 @Injectable()
 export class LocalAuthService {
-  constructor(private readonly grantService: KeycloakGrantService) {}
-  async login(loginDto: LocalLoginDto): Promise<any> {
+  constructor(
+    private readonly grantService: KeycloakGrantService,
+    @Inject(KYSELY_DATABASE_CONNECTION) private readonly kysely: Kysely<DB>
+  ) {}
+  async login(loginDto: LocalLoginDto): Promise<TokenResponse> {
     const { email, password } = loginDto;
 
-    try {
-      const grant = await this.grantService.issueGrant({ email, password });
+    const grant = await this.grantService.issueGrant({ email, password });
 
-      const { access_token, refresh_token, expires_in } = grant;
+    const keycloakUser = await this.grantService.getUserInfoFromToken(grant.access_token!);
 
-      if (!access_token) {
-        throw new InternalServerErrorException('Cannot issue token');
-      }
-      console.log(JSON.stringify(access_token));
-
-      const keycloakUser = await this.grantService.getUserInfoFromToken(access_token);
-
-      if (!keycloakUser) {
-        throw new InternalServerErrorException('Cannot get user info from token');
-      }
-
-      //get user from db
-      //if user doesnt exist in db throw internal server error so we know db isnt synced with keycloak
-
-      return {
-        refreshToken: refresh_token,
-        accessToken: access_token,
-        expires: expires_in
-      };
-    } catch (error) {
-      if ((error as Error)?.message === '401:Unauthorized') {
-        const keycloakError = error as KeycloakError;
-        throw new UnauthorizedException(keycloakError.message, keycloakError.response?.data);
-      }
-      throw error;
+    if (!keycloakUser) {
+      throw new InternalServerErrorException('Cannot get user info from token');
     }
+
+    //get user from db
+    //if user doesnt exist in db throw internal server error so we know db isnt synced with keycloak
+    const userInDb = await this.kysely
+      .selectFrom('User')
+      .where('email', '=', keycloakUser.email)
+      .executeTakeFirst();
+
+    if (!userInDb) {
+      //TODO logger, need to know if this happens
+      throw new InternalServerErrorException('User does not exist in database');
+    }
+    return {
+      refreshToken: grant.refresh_token.token,
+      accessToken: grant.access_token.token,
+      expires: grant.expires_in
+    };
   }
 
   async register(registerDto: LocalRegisterDto) {

@@ -21,7 +21,7 @@ export class LocalAuthController {
   @Public()
   @Post('register')
   async register(@Body() registerDto: LocalRegisterDto) {
-    return this.localAuthService.register(registerDto);
+    /*     return this.localAuthService.register(registerDto); */
   }
 
   @Post('logout')
