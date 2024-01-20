@@ -15,13 +15,13 @@ export class KeycloakConfigService implements KeycloakConnectOptionsFactory {
     private readonly kcConfig: ConfigType<typeof keycloakConfig>
   ) {}
   createKeycloakConnectOptions(): KeycloakConnectOptions {
-    const { serverUrl, realm, clientId, secret } = this.kcConfig;
+    const { serverUrl, realm, clientId, clientSecret } = this.kcConfig;
 
     return {
       authServerUrl: serverUrl,
       realm,
       clientId,
-      secret,
+      secret: clientSecret,
       bearerOnly: true,
       useNestLogger: true,
       cookieKey: 'KEYCLOAK_JWT',
