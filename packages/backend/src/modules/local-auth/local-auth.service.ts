@@ -31,7 +31,7 @@ export class LocalAuthService {
     return {
       refreshToken: grant.refresh_token.token,
       accessToken: grant.access_token.token,
-      expires: grant.expires_in
+      expires: grant.refresh_token.content.exp
     };
   }
 

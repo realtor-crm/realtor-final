@@ -1,5 +1,5 @@
 export type TokenResponse = {
-  expires: string | undefined;
+  expires: number | undefined;
   accessToken: string;
   refreshToken: string;
 };
