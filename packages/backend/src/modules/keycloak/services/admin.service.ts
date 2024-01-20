@@ -24,11 +24,12 @@ export class KeycloakAdminService {
     });
   }
 
-  public async authenticateAdmin() {
+  private async authenticateAdmin() {
+    const { clientId, clientSecret } = this.kcConfig;
     await this.adminClient.auth({
       grantType: 'client_credentials',
-      clientId: this.kcConfig.clientId,
-      clientSecret: this.kcConfig.secret
+      clientId,
+      clientSecret
     });
   }
 
@@ -42,6 +43,8 @@ export class KeycloakAdminService {
     activeProfile: boolean;
   }) {
     const { email, firstName, lastName, password } = registerDto;
+
+    await this.authenticateAdmin();
 
     return this.adminClient.users.create({
       username: email,

@@ -20,7 +20,7 @@ import { KeycloakGrantService } from './services/grant.service';
       inject: [keycloakConfig.KEY],
       useFactory: (kcConfig: ConfigType<typeof keycloakConfig>) => {
         return new KeycloakAdminClient({
-          baseUrl: kcConfig['auth-server-url'],
+          baseUrl: kcConfig.serverUrl,
           realmName: kcConfig.realm
         });
       }
