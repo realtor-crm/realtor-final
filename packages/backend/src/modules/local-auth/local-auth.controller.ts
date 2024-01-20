@@ -1,4 +1,5 @@
-import { Body, Controller, Post, UsePipes } from '@nestjs/common';
+import { STATUS_CODES } from 'http';
+import { Body, Controller, HttpCode, HttpStatus, Post, UsePipes } from '@nestjs/common';
 import { Public } from 'nest-keycloak-connect';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { LocalLoginDto } from './dtos/login.dto';
@@ -21,6 +22,7 @@ export class LocalAuthController {
   @Public()
   @Post('register')
   @UsePipes(ZodValidationPipe)
+  @HttpCode(HttpStatus.CREATED)
   async register(@Body() registerDto: LocalRegisterDto) {
     return this.localAuthService.register(registerDto);
   }

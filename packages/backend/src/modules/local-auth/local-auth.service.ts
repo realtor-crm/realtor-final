@@ -1,12 +1,10 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { TokenResponse } from '../auth/types/auth.types';
 import { KeycloakAdminService } from '../keycloak/services/admin.service';
 import { KeycloakGrantService } from '../keycloak/services/grant.service';
 import { UserService } from '../user/user.service';
 import { LocalLoginDto } from './dtos/login.dto';
 import { LocalRegisterDto } from './dtos/register.dto';
-
-//TODO hide error messages from user and add logging using winston
 
 @Injectable()
 export class LocalAuthService {
@@ -26,11 +24,8 @@ export class LocalAuthService {
       throw new InternalServerErrorException('Cannot get user info from token');
     }
 
-    //get user from db
-    //if user doesnt exist in db throw internal server error so we know db isnt synced with keycloak
     const userInDb = await this.userService.findUserByEmail(keycloakUser.email);
     if (!userInDb) {
-      //TODO logger, need to know if this happens
       throw new InternalServerErrorException('User does not exist in database');
     }
     return {
@@ -44,18 +39,28 @@ export class LocalAuthService {
     return this.createUser(registerDto);
   }
 
-  private async createUser(registerDto: LocalRegisterDto) {
+  private async createUser(registerDto: LocalRegisterDto): Promise<{ message: string }> {
     const keycloakUser = await this.adminService.createKeycloakUser({
       registerDto,
       verifyEmail: true,
       activeProfile: true
     });
 
-    //TODO logger, need to know if this happens
-    if (!keycloakUser) {
-      throw new InternalServerErrorException('Cannot create user in keycloak');
+    try {
+      const userInDb = await this.userService.createUser(registerDto, keycloakUser.id);
+      if (!userInDb) {
+        throw new InternalServerErrorException('Cannot create user');
+      }
+    } catch (error) {
+      // If there's an error when creating the user in the local database,
+      // delete the user from Keycloak to keep the two systems in sync.
+      await this.adminService.deleteUserById(keycloakUser.id);
+      throw error;
     }
-    return keycloakUser;
+
+    return {
+      message: 'User created successfully'
+    };
   }
 
   public async logout() {
