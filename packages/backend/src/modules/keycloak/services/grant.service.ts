@@ -60,14 +60,7 @@ export class KeycloakGrantService {
     }
   }
 
-  public async issueToken({
-    email,
-    password
-  }: {
-    email: string;
-    password: string;
-  }): Promise<Token | undefined> {
-    const grant = await this.issueGrant({ email, password });
-    return grant.access_token;
+  public async issueGrantFromRefreshToken(refreshToken: string): Promise<any> {
+    //TODO
   }
 }
