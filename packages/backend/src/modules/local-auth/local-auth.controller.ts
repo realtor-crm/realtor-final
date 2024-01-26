@@ -32,19 +32,23 @@ export class LocalAuthController {
     loginDto: LocalLoginDto,
     @Res({ passthrough: true }) response: Response
   ) {
-    const { expires = 0, refreshToken, accessToken } = await this.localAuthService.login(loginDto);
+    const {
+      refresh_expires_in = 0,
+      refresh_token,
+      access_token
+    } = await this.localAuthService.login(loginDto);
 
     const { rememberMe } = loginDto;
 
     const cookieOptions = {
       httpOnly: true,
-      ...(rememberMe ? { maxAge: expires * 1000 } : {})
+      ...(rememberMe ? { maxAge: refresh_expires_in * 1000 } : {})
     };
 
-    response.cookie(this.jwtConfiguration.cookieName, refreshToken, cookieOptions);
+    response.cookie(this.jwtConfiguration.cookieName, refresh_token, cookieOptions);
 
     return {
-      accessToken
+      access_token
     };
   }
 

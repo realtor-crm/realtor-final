@@ -13,7 +13,11 @@ export class LocalAuthService {
     private readonly userService: UserService,
     private readonly adminService: KeycloakAdminService
   ) {}
-  async login(loginDto: LocalLoginDto): Promise<TokenResponse> {
+  async login(loginDto: LocalLoginDto): Promise<
+    TokenResponse & {
+      refresh_expires_in: number | undefined;
+    }
+  > {
     const { email, password } = loginDto;
 
     const grant = await this.grantService.issueGrant({ email, password });
@@ -28,10 +32,11 @@ export class LocalAuthService {
     if (!userInDb) {
       throw new InternalServerErrorException('User does not exist in database');
     }
+    const { refresh_token, access_token } = grant;
     return {
-      refreshToken: grant.refresh_token.token,
-      accessToken: grant.access_token.token,
-      expires: grant.refresh_token.content.exp
+      refresh_token: refresh_token.token,
+      access_token: access_token.token,
+      refresh_expires_in: refresh_token.content.exp
     };
   }
 
