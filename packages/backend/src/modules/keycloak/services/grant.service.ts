@@ -70,9 +70,7 @@ export class KeycloakGrantService {
     }
   }
 
-  public async issueGrantFromRefreshToken(
-    refreshToken: string
-  ): Promise<Observable<TokenResponse>> {
+  public issueGrantFromRefreshToken(refreshToken: string): Observable<TokenResponse> {
     const tokenUrl = this.urlService.getTokenUrl();
 
     const data = {

@@ -8,7 +8,7 @@ export class AuthService {
   public constructor(private readonly grantService: KeycloakGrantService) {}
   public logout(userId: string) {}
 
-  public refresh(refreshToken: string): Promise<Observable<TokenResponse>> {
+  public refresh(refreshToken: string): Observable<TokenResponse> {
     return this.grantService.issueGrantFromRefreshToken(refreshToken);
   }
 }
