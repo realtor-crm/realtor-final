@@ -1,4 +1,4 @@
-import { Controller, Inject, Post, Req } from '@nestjs/common';
+import { Controller, Inject, Post, Req, UnauthorizedException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { Request } from 'express';
 import { AuthenticatedUser, Public } from 'nest-keycloak-connect';
@@ -22,7 +22,12 @@ export class AuthController {
   @Post('refresh')
   @Public()
   async refresh(@Req() request: Request) {
-    const refreshToken = request.cookies[this.jwtConfiguration.cookieName];
+    const refreshToken = request.cookies?.[this.jwtConfiguration.cookieName];
+
+    if (!refreshToken) {
+      throw new UnauthorizedException('Refresh token not found');
+    }
+
     return this.authService.refresh(refreshToken);
   }
 }

@@ -86,12 +86,4 @@ export class KeycloakAdminService {
       id
     });
   }
-
-  public async logoutUser(userId: string) {
-    await this.authenticateAdmin();
-
-    return this.adminClient.users.logout({
-      id: userId
-    });
-  }
 }

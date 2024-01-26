@@ -1,21 +1,14 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { KeycloakAdminService } from '../keycloak/services/admin.service';
+import { Observable } from 'rxjs';
 import { KeycloakGrantService } from '../keycloak/services/grant.service';
+import { TokenResponse } from './types/auth.types';
 
 @Injectable()
 export class AuthService {
-  public constructor(
-    private readonly adminService: KeycloakAdminService,
-    private readonly grantService: KeycloakGrantService
-  ) {}
-  public logout(userId: string) {
-    return this.adminService.logoutUser(userId);
-  }
+  public constructor(private readonly grantService: KeycloakGrantService) {}
+  public logout(userId: string) {}
 
-  public refresh(refreshToken: string | undefined) {
-    if (!refreshToken) {
-      throw new UnauthorizedException('Refresh token not found');
-    }
+  public refresh(refreshToken: string): Promise<Observable<TokenResponse>> {
     return this.grantService.issueGrantFromRefreshToken(refreshToken);
   }
 }
