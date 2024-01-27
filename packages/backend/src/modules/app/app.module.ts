@@ -23,7 +23,6 @@ import { envSchema } from './schemas/env.schema';
         const parsed = envSchema.safeParse(config);
 
         if (!parsed.success) {
-          //make the error message more descriptive
           const errors = parsed.error.message
             .replace('Invalid value', 'Invalid value for')
             .replace('should be', 'of type');
@@ -47,7 +46,6 @@ import { envSchema } from './schemas/env.schema';
     UserModule,
     KeycloakModule,
     KyselyDatabaseModule
-    /*     PrismaModule */
   ],
   controllers: [AppController],
   providers: [
