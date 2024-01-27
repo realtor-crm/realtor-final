@@ -3,7 +3,7 @@ import { ConfigType } from '@nestjs/config';
 import { Request, Response } from 'express';
 import { AuthenticatedUser, Public } from 'nest-keycloak-connect';
 import { firstValueFrom } from 'rxjs';
-import { jwtConfig } from '../config/jwt.config';
+import { jwtConfig } from '../../config/jwt/jwt.config';
 import { KeycloakTokenParsed } from '../keycloak/types/grant.type';
 import { AuthService } from './auth.service';
 

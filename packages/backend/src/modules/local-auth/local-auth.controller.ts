@@ -12,7 +12,7 @@ import { ConfigType } from '@nestjs/config';
 import { Response } from 'express';
 import { Public } from 'nest-keycloak-connect';
 import { ZodValidationPipe } from 'nestjs-zod';
-import { jwtConfig } from '../config/jwt.config';
+import { jwtConfig } from '../../config/jwt/jwt.config';
 import { LocalLoginDto } from './dtos/login.dto';
 import { LocalRegisterDto } from './dtos/register.dto';
 import { LocalAuthService } from './local-auth.service';

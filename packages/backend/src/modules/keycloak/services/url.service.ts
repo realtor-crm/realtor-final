@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { keycloakConfig } from '../../config';
+import { keycloakConfig } from '../../../config';
 
 @Injectable()
 export class KeycloakUrlService {

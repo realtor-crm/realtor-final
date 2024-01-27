@@ -3,7 +3,7 @@ import { ConfigType } from '@nestjs/config';
 import { Kysely, PostgresDialect } from 'kysely';
 import { Pool } from 'pg';
 import { DB } from '@/src/db/types';
-import { kyselyConfig } from '../config/kysely.config';
+import { kyselyConfig } from '../../config/kysely/kysely.config';
 import { KYSELY_DATABASE_CONNECTION } from './constants';
 
 @Global()

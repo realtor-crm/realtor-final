@@ -8,7 +8,7 @@ import {
   InternalServerErrorException
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { keycloakConfig } from '../../config';
+import { keycloakConfig } from '../../../config';
 import { LocalRegisterDto } from '../../local-auth/dtos/register.dto';
 import { KEYCLOAK_ADMIN_CLIENT } from '../constants';
 

@@ -4,14 +4,14 @@ import { ConfigModule, ConfigType } from '@nestjs/config';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { redisStore } from 'cache-manager-redis-yet';
 import { AuthGuard, RoleGuard } from 'nest-keycloak-connect';
+import { appConfig, jwtConfig, keycloakConfig, kyselyConfig, redisConfig } from '../../config';
+import { envSchema } from '../../config/env.schema';
 import { AuthModule } from '../auth/auth.module';
-import { appConfig, jwtConfig, keycloakConfig, kyselyConfig, redisConfig } from '../config';
 import { KeycloakModule } from '../keycloak/keycloak.module';
 import { KyselyDatabaseModule } from '../kysely/kysely.module';
 import { UserModule } from '../user/user.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { envSchema } from './schemas/env.schema';
 
 @Module({
   imports: [

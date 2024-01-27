@@ -3,7 +3,7 @@ import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { KeycloakConnectModule } from 'nest-keycloak-connect';
-import { keycloakConfig } from '../config';
+import { keycloakConfig } from '../../config';
 import { KEYCLOAK_ADMIN_CLIENT } from './constants';
 import { KeycloakAdminService } from './services/admin.service';
 import { KeycloakConfigService } from './services/config.service';
