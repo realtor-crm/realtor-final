@@ -1,6 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 import { AppModule } from './modules/app/app.module';
 
 async function bootstrap() {
@@ -10,6 +11,8 @@ async function bootstrap() {
   const port = configService.get('app.port');
 
   app.use(cookieParser());
+
+  app.use(helmet());
 
   app.enableCors({
     origin: configService.get('app.corsOrigin'),
