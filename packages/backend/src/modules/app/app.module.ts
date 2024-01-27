@@ -1,7 +1,8 @@
-import { RedisModule } from '@nestjs-modules/ioredis';
+import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { redisStore } from 'cache-manager-redis-yet';
 import { AuthGuard, RoleGuard } from 'nest-keycloak-connect';
 import { AuthModule } from '../auth/auth.module';
 import { appConfig, keycloakConfig } from '../config';
@@ -35,15 +36,15 @@ import { envSchema } from './schemas/env.schema';
         return config;
       }
     }),
-    RedisModule.forRootAsync({
+    CacheModule.registerAsync({
       imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (redisConf: ConfigType<typeof redisConfig>) => {
-        return {
-          type: 'single',
-          url: redisConf.redisUrl
-        };
-      }
+      inject: [redisConfig.KEY],
+      useFactory: async (redisConf: ConfigType<typeof redisConfig>) => ({
+        store: redisStore,
+        ttl: redisConf.redisTtl,
+        url: redisConf.redisUrl
+      }),
+      isGlobal: true
     }),
     AuthModule,
     UserModule,
@@ -55,7 +56,11 @@ import { envSchema } from './schemas/env.schema';
   providers: [
     AppService,
     { provide: APP_GUARD, useClass: AuthGuard },
-    { provide: APP_GUARD, useClass: RoleGuard }
+    { provide: APP_GUARD, useClass: RoleGuard },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor
+    }
   ]
 })
 export class AppModule {}
