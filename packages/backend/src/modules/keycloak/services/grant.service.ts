@@ -4,11 +4,13 @@ import {
   Inject,
   Injectable,
   InternalServerErrorException,
+  LoggerService,
   UnauthorizedException
 } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
 import KeycloakConnect, { Grant, Token } from 'keycloak-connect';
 import { KEYCLOAK_INSTANCE } from 'nest-keycloak-connect';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { catchError, map, Observable } from 'rxjs';
 import { TokenResponse } from '../../auth/types/auth.types';
 import { KeycloakError } from '../types/error.type';
@@ -31,7 +33,9 @@ export class KeycloakGrantService {
     @Inject(KEYCLOAK_INSTANCE)
     private readonly keycloak: KeycloakConnect.Keycloak,
     private readonly httpService: HttpService,
-    private readonly urlService: KeycloakUrlService
+    private readonly urlService: KeycloakUrlService,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER)
+    private readonly logger: LoggerService
   ) {}
   private isGrantWithRequiredTokens(grant: Grant): grant is GuaranteedGrant {
     if (!grant.access_token || !grant.refresh_token) {
@@ -90,7 +94,10 @@ export class KeycloakGrantService {
       })),
       catchError(({ response }: { response: AxiosResponse<KeycloakErrorResponse> }) => {
         const error = response.data;
-        //Logger.error("Couldn't get authentication from keycloak. Error: " + JSON.stringify(error));
+
+        this.logger.error(
+          "Couldn't get authentication from keycloak. Error: " + JSON.stringify(error)
+        );
 
         if (error.error === 'invalid_grant') {
           throw new UnauthorizedException('InvalidRefreshTokenError');

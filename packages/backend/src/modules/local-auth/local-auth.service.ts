@@ -1,4 +1,6 @@
-import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 import { TokenResponse } from '../auth/types/auth.types';
 import { KeycloakAdminService } from '../keycloak/services/admin.service';
 import { KeycloakGrantService } from '../keycloak/services/grant.service';
@@ -11,7 +13,9 @@ export class LocalAuthService {
   constructor(
     private readonly grantService: KeycloakGrantService,
     private readonly userService: UserService,
-    private readonly adminService: KeycloakAdminService
+    private readonly adminService: KeycloakAdminService,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER)
+    private readonly logger: Logger
   ) {}
   async login(loginDto: LocalLoginDto): Promise<
     TokenResponse & {
@@ -25,11 +29,13 @@ export class LocalAuthService {
     const keycloakUser = await this.grantService.getUserInfoFromToken(grant.access_token!);
 
     if (!keycloakUser) {
+      this.logger.error('Couldnt get userinfo from token for this user: ' + email);
       throw new InternalServerErrorException('Cannot get user info from token');
     }
 
     const userInDb = await this.userService.findUserByEmail(keycloakUser.email);
     if (!userInDb) {
+      this.logger.error('Keycloak db and backend db wasnt synced for this user: ' + email);
       throw new InternalServerErrorException('User does not exist in database');
     }
     const { refresh_token, access_token } = grant;
@@ -51,9 +57,15 @@ export class LocalAuthService {
       activeProfile: true
     });
 
+    if (!keycloakUser) {
+      this.logger.error('Couldnt create user in keycloak for this user: ' + registerDto.email);
+      throw new InternalServerErrorException('Cannot create user');
+    }
+
     try {
       const userInDb = await this.userService.createUser(registerDto, keycloakUser.id);
       if (!userInDb) {
+        this.logger.error('Couldnt create user in local db for this user: ' + registerDto.email);
         throw new InternalServerErrorException('Cannot create user');
       }
     } catch (error) {
@@ -66,9 +78,5 @@ export class LocalAuthService {
     return {
       message: 'User created successfully'
     };
-  }
-
-  public async logout() {
-    return 'logout';
   }
 }

@@ -4,6 +4,7 @@ import { ConfigModule, ConfigType } from '@nestjs/config';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { redisStore } from 'cache-manager-redis-yet';
 import { AuthGuard, RoleGuard } from 'nest-keycloak-connect';
+import { WinstonModule } from 'nest-winston';
 import { appConfig, jwtConfig, keycloakConfig, kyselyConfig, redisConfig } from '../../config';
 import { envSchema } from '../../config/env.schema';
 import { AuthModule } from '../auth/auth.module';
@@ -41,6 +42,10 @@ import { AppService } from './app.service';
         url: redisConf.redisUrl
       }),
       isGlobal: true
+    }),
+    WinstonModule.forRootAsync({
+      useFactory: () => ({}),
+      inject: []
     }),
     AuthModule,
     UserModule,
