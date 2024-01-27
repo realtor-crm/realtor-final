@@ -69,6 +69,15 @@ services:
       - ./keycloak/realms:/opt/keycloak/data/import
       - ./keycloak/themes:/opt/keycloak/themes
 
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - cache:/data
+
 volumes:
   postgres-data:
   keycloak-data:
+  cache:

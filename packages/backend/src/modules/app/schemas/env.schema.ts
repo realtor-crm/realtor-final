@@ -20,6 +20,10 @@ const jwtSchema = z.object({
   JWT_COOKIE_NAME: z.string()
 });
 
-const schemas = [keycloakSchema, databaseSchema, appSchema, jwtSchema];
+const redisSchema = z.object({
+  REDIS_URL: z.string().url()
+});
+
+const schemas = [keycloakSchema, databaseSchema, appSchema, jwtSchema, redisSchema];
 
 export const envSchema = schemas.reduce((acc, schema) => acc.merge(schema), z.object({}));
