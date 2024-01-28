@@ -69,6 +69,9 @@ export class KeycloakGrantService {
       if ((error as Error)?.message === '401:Unauthorized') {
         const keycloakError = error as KeycloakError;
         throw new UnauthorizedException(keycloakError.message, keycloakError.response?.data);
+      } else if ((error as Error)?.message === '400:Bad Request') {
+        //TODO internationalization
+        throw new UnauthorizedException('You must verify your email before logging in!');
       }
       throw error;
     }
