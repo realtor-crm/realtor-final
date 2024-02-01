@@ -13,12 +13,86 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  ADMIN
+  USER
+}
+
 model User {
   id         Int      @id @default(autoincrement())
+  public_id  String   @unique @default(uuid())
   email      String   @unique
   firstName  String
   lastName   String
-  keycloakId String
+  role       Role
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  keycloakId String
+}
+
+enum PropertyStatus {
+  FOR_SALE
+  FOR_RENT
+}
+
+enum Garden {
+  FRONT
+  BACK
+  BOTH
+  SIDE
+}
+model Property {
+  id                Int              @id @default(autoincrement())
+  public_id         String           @unique @default(uuid())
+  name              String
+  description       String
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  addressId         Int
+  address           Address          @relation(fields: [addressId], references: [id])
+  propertyDetailsId Int?
+  propertyDetails   PropertyDetails? @relation(fields: [propertyDetailsId], references: [id])
+  pricingId         Int?
+  pricing           Pricing?         @relation(fields: [pricingId], references: [id])
+  landDetailsId     Int?
+  landDetails       LandDetails?     @relation(fields: [landDetailsId], references: [id])
+}
+
+model PropertyDetails {
+  id         Int        @id @default(autoincrement())
+  livableArea   Decimal 
+  Property   Property[]
+}
+
+model LandDetails {
+  id         Int        @id @default(autoincrement())
+  landArea   Decimal
+  sillLevel  Decimal
+  garden  Garden
+  Property   Property[]
+}
+
+model Pricing {
+  id         Int        @id @default(autoincrement())
+  askingPrice Decimal
+  deposit   Decimal
+  utilities Decimal
+  hoaFees Decimal
+  Property   Property[]
+}
+
+model Address {
+  id         Int        @id @default(autoincrement())
+  postalCode String
+  country    String
+  county    String
+  city       String
+  street     String
+  houseNumber String
+  apartmentNumber String?
+  floor       Int?
+  landRegistryNumber String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  Property   Property[]
 }
